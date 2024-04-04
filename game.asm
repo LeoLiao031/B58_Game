@@ -71,19 +71,19 @@ debugOne: .asciiz "Register value "
 newline: .asciiz "\n"
 
 # number of saws that we have
-sawCount: .word 1
+sawCount: .word 2
 
 # this will store the starting locations of the saws
-sawStarting: .word 29864
+sawStarting: .word 29864, 3040
 
 # this will store the end locations of the saws
-sawEnding: .word 30024
+sawEnding: .word 30024, 24448
 
 # this will store the state that saws are in frame (1 - 3)
 sawStates: .word 0, 1, 2, 0, 1 , 2
 
 # this will store the current locations of the saws (based on their centers)
-sawLocations: .word 29864
+sawLocations: .word 29864, 3040
 
 # these will store which direction the saw is currently moving in
 # 0: stationary
@@ -143,7 +143,7 @@ main:
     
     # $s6 and $v1 will never be touched by other functions
     li $v1, 0
-    li $s6, 1000
+    li $s6, 100
     # game loop where we will call functions that update frames of objects and users position
 GameLoop:
     # Draw the saws
@@ -286,7 +286,6 @@ DRAWSAWSLOOP:
 MOVECALCEND:
     # based on location in $t7 draw the saw based on it's current frame then increment frame num
     # check the CURRENT location if we're at either the start or end then we will multiply direction negative (so it moves other way next cycle)
-    registerValue($t8)
     beq $t3, $t8, CHANGEDIR
     beq $t4, $t8, CHANGEDIR
     j DRAWFRAME
@@ -372,7 +371,7 @@ MOVESLEFT:
     #  $t7   x <- 1 
     #        x <- 2
     #      x
-    addi $t9, $t7, 8
+    addi $t9, $t7, 1036
     sw $t9, 0($a1)
     addi $t9, $t9, 512
     sw $t9, 4($a1)
@@ -406,7 +405,7 @@ MOVESRIGHT:
     #  -> 1  x  $t7
     #  -> 2  x 
     #          x
-    addi $t9, $t7, -8
+    addi $t9, $t7, 1020
     registerValue($t9)
     sw $t9, 0($a1)
     addi $t9, $t9, 512
